@@ -1,7 +1,9 @@
 package world
 
-case class Location(name: String, description: String, items: List[Item]) {
+case class Location(name: String, description: String, items: List[Item] = List(), exits: Map[String,Location] = Map()) {
   def hasItems = !items.isEmpty
+  
+  def hasExits = !exits.isEmpty
 
   def findNamedItem(name: String): List[Item] = {
     val nameParts = name.split("\\s+").toList
@@ -12,5 +14,9 @@ case class Location(name: String, description: String, items: List[Item]) {
 
       items.filter { item => adjectives.subsetOf(item.adjectives) && item.noun == noun }
     } else List()
+  }
+  
+  def findNamedExit(name: String): Option[Location] = {
+    exits.get(name)
   }
 }
