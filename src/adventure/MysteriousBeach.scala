@@ -6,7 +6,7 @@ import world.Item
 
 object MysteriousBeach {
 
-  val displayExitsOnLook = false
+  val displayExitsOnLook = true
   
   val oldBottle = Item(
     label = "Old glass bottle",
@@ -26,14 +26,19 @@ object MysteriousBeach {
     
   val mysteriousBeach = Location(
     name = "Mysterious Beach",
-    description = "You are standing on a mysterious beach.",
-    items = List(oldBottle, emptyBottle),
-    exits = Map( "north" -> tranquilCove))
+    description = "You are standing on a mysterious beach. To the north you can see a tranquil cove.",
+    items = List(oldBottle, emptyBottle))
+  
+  mysteriousBeach.addExit("north", tranquilCove)  
+  tranquilCove.addExit("south", mysteriousBeach)
   
   val start = mysteriousBeach
 
   def begin(): Adventurer = {
-    new Adventurer(currentLocation = start, items = List())
+    new Adventurer(
+        currentLocation = start, 
+        items = List(),
+        "You are wearing a loose-fitting blue flight suit that appears to have been bleached by prolongued exposure to sun and salt water.")
   }
 
 }

@@ -18,25 +18,33 @@ object Shell extends App {
       }
     }
 
-    def look {
+    def showLocation {
       println(adventurer.currentLocation.description)
       if (adventurer.currentLocation.hasItems) {
         println("\nYou see the following items:")
         adventurer.currentLocation.items foreach { i => println(s"* ${i.label}") }
       }
-      if (adventure.displayExitsOnLook) exits
+    }
+
+    def look {
+      showLocation
+      if (adventure.displayExitsOnLook) {
+        println()
+        exits
+      }
     }
 
     def stopAdventuring = adventuring = false
 
-    def examine(itemNameParts: List[String]) {
-      if (itemNameParts.isEmpty) {
+    def examine(itemNameParts: List[String]) = itemNameParts match {
+      case List("me") => println(adventurer.description)
+      case List() =>
         println("What would you like to examine?")
-      } else {
+      case List(_*) => {
         val itemName = itemNameParts.mkString(" ")
         adventurer.currentLocation.findNamedItem(itemName) match {
           case List(foundItem) => println(foundItem.description)
-          case List(_, _*) => println(s"Which $itemName did you mean?")
+          case List(_, _*) => println(s"There is more than one $itemName. You need to be more specific.")
           case _ => println("I don't know what that is.")
         }
       }
@@ -45,20 +53,34 @@ object Shell extends App {
     def move(exitNameParts: List[String]) {
       if (!exitNameParts.isEmpty) {
 
-        adventurer.currentLocation.findNamedExit(exitNameParts .head) match {
+        adventurer.currentLocation.findNamedExit(exitNameParts.head) match {
           case Some(location) => {
-            adventurer = adventurer.moveTo(location)
-            look
+            adventurer.moveTo(location)
+            showLocation
           }
-          case _ => println("You can't go that way.")
+          case _ => invalidDestination
         }
       } else println("Where do you want to go?")
     }
-  }
 
+    def useExit(mightBeAnExitName: String) {
+      adventurer.currentLocation.exits.get(mightBeAnExitName) match {
+        case Some(destination) => {
+          adventurer.moveTo(destination)
+          showLocation
+        }
+        case _ => invalidDestination
+      }
+    }
+
+    def invalidAction = println("You don't know how to do that.")
+
+    def invalidDestination = println("You can't go that way.")
+
+  }
   private val avatar = new ShellAdventurer(adventure.begin)
 
-  avatar.look
+  avatar.showLocation
 
   do {
 
@@ -73,19 +95,22 @@ object Shell extends App {
       case List("look") => avatar.look
       case "examine" :: itemNameParts => avatar.examine(itemNameParts)
       case "go" :: exitNameParts => avatar.move(exitNameParts)
+      case "walk" :: exitNameParts => avatar.move(exitNameParts)
       case List("exits") => avatar.exits
       case List("") => Unit
       case List("help") => showCommands
       case List("commands") => showCommands
-      case _ => println("You don't know how to do that.")
+      case List("north") => avatar.useExit("north")
+      case List("south") => avatar.useExit("south")
+      case _ => avatar.invalidAction
     }
 
   } while (adventuring)
 
   println("You'll never win that way.")
-  
+
   def showCommands {
-    println("quit, look, examine, go, exits, help, commands")
+    println("quit, look, examine, go, walk, north, south, exits, help, commands")
   }
 
 }

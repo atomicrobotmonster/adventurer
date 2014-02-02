@@ -1,5 +1,7 @@
 package world
 
+import scala.collection.mutable.Map
+
 case class Location(name: String, description: String, items: List[Item] = List(), exits: Map[String,Location] = Map()) {
   def hasItems = !items.isEmpty
   
@@ -19,4 +21,6 @@ case class Location(name: String, description: String, items: List[Item] = List(
   def findNamedExit(name: String): Option[Location] = {
     exits.get(name)
   }
+  
+  def addExit(name: String, destination: Location) = exits += (name -> destination)
 }

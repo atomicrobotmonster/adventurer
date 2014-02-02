@@ -1,5 +1,7 @@
 package world
 
-class World {
+import scala.collection.mutable.Map
+
+case class World() {
 
 }
