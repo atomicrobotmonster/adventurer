@@ -3,26 +3,15 @@ package world
 import scala.collection.mutable.Map
 import scala.collection.immutable.ListSet
 
-case class Location(name: String, description: String, var items: ListSet[Item] = ListSet(), exits: Map[String,Location] = Map()) {
-  def hasItems = !items.isEmpty
+case class Location(
+  name: String, 
+  description: String, 
+  items: ListSet[Item] = ListSet(), 
+  exits: Map[String,Location] = Map()) extends ItemContainer { 
   
+  addItems(items)
+
   def hasExits = !exits.isEmpty
-
-  def findNamedItem(name: String): List[Item] = {
-    Item.findNamedItem(name, items.toList)
-  }
-  
-  def removeItem(item: Item) {
-    items = items - item
-
-    assert(!items.contains(item))
-  }
-
-  def addItem(item: Item) {
-    items = items + item
-
-    assert(items.contains(item))
-  }
 
   def findNamedExit(name: String): Option[Location] = {
     exits.get(name)

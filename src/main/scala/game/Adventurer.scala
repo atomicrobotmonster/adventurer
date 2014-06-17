@@ -1,9 +1,17 @@
 package game
 
-import world.Location
-import world.Item
+import scala.collection.immutable.ListSet
 
-case class Adventurer(var currentLocation: Location, items: List[Item], description: String) {
+import world.{ Location, Item, ItemContainer }
+
+
+case class Adventurer(
+	var currentLocation: Location, 
+	items: ListSet[Item] = ListSet[Item](), 
+	description: String) extends ItemContainer {
+  
+  addItems(items)
+
   def moveTo(newLocation: Location) = { currentLocation = newLocation }
   
 }

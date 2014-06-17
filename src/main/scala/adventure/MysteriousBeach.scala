@@ -39,8 +39,7 @@ object MysteriousBeach {
   def begin(): Adventurer = {
     new Adventurer(
         currentLocation = start, 
-        items = List(),
-        "You are wearing a loose-fitting blue flight suit that appears to have been bleached by prolongued exposure to sun and salt water.")
+        description = "You are wearing a loose-fitting blue flight suit that appears to have been bleached by prolongued exposure to sun and salt water.")
   }
 
 }

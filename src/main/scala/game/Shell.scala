@@ -12,8 +12,6 @@ object Shell extends App {
 
   class ShellAdventurer(var adventurer: Adventurer) {
 
-    var inventory: ListSet[Item] = ListSet()
-
     def exits {
       if (adventurer.currentLocation.hasExits) {
         println("You can travel:")
@@ -27,7 +25,7 @@ object Shell extends App {
       println(adventurer.currentLocation.description)
       if (adventurer.currentLocation.hasItems) {
         println("\nYou see the following items:")
-        adventurer.currentLocation.items foreach { i => println(s"* ${i.label}") }
+        adventurer.currentLocation.contents foreach { i => println(s"* ${i.label}") }
       }
     }
 
@@ -47,7 +45,7 @@ object Shell extends App {
         println("What would you like to examine?")
       case List(_*) => {
         val itemName = itemNameParts.mkString(" ")
-          Item.findNamedItem(itemName, adventurer.currentLocation.items ++ inventory) match {
+          Item.findNamedItem(itemName, adventurer.currentLocation.items ++ adventurer.items) match {
           case List(foundItem) => println(foundItem.description)
           case List(_, _*) => println(s"There is more than one $itemName. You need to be more specific.")
           case _ => println("I don't know what that is.")
@@ -86,7 +84,7 @@ object Shell extends App {
             adventurer.currentLocation.findNamedItem(itemName) match {
             case List(foundItem) => {
               adventurer.currentLocation.removeItem(foundItem)
-              inventory += foundItem
+              adventurer.addItem(foundItem)
               println(s"You take the $itemName.")
             }
             case List(_, _*) => println(s"There is more than one $itemName. You need to be more specific.")
@@ -101,10 +99,10 @@ object Shell extends App {
         case Nil => println("What do you want to take?")
         case List(_*) => {
           val itemName = itemNameParts.mkString(" ")
-            Item.findNamedItem(itemName, inventory.toList) match {
+            Item.findNamedItem(itemName, adventurer.items) match {
             case List(foundItem) => {
               adventurer.currentLocation.addItem(foundItem)
-              inventory = inventory - foundItem
+              adventurer.removeItem(foundItem)
               println(s"You drop the $itemName.")
             }
             case List(_, _*) => println(s"You are carrying than one $itemName. You need to be more specific.")
@@ -116,7 +114,7 @@ object Shell extends App {
 
     def listInventory {
         println("You are carrying:")
-        inventory foreach { item => println(s"* ${item.label}") }
+        adventurer.contents foreach { item => println(s"* ${item.label}") }
     }
 
     def invalidAction = println("You don't know how to do that.")
@@ -137,15 +135,14 @@ object Shell extends App {
     val inputTokens: List[String] = playerInput.split("\\s+").toList
 
     inputTokens match {
-      case List("quit") => avatar.stopAdventuring
+      case List("quit") | List("exit") => avatar.stopAdventuring
       case List("look") => avatar.look
       case "examine" :: itemNameParts => avatar.examine(itemNameParts)
       case "go" :: exitNameParts => avatar.move(exitNameParts)
       case "walk" :: exitNameParts => avatar.move(exitNameParts)
       case List("exits") => avatar.exits
       case List("") => Unit
-      case List("help") => showCommands
-      case List("commands") => showCommands
+      case List("help") | List("commands") => showCommands
       case List("north") => avatar.useExit("north")
       case List("south") => avatar.useExit("south")
       case List("east") => avatar.useExit("east")

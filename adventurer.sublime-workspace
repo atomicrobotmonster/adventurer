@@ -3,34 +3,59 @@
 	{
 		"selected_items":
 		[
+			[
+				"L",
+				"ListSet"
+			]
 		]
 	},
 	"buffers":
 	[
 		{
-			"file": "src/adventure/MysteriousBeach.scala",
+			"file": "src/main/scala/game/Shell.scala",
 			"settings":
 			{
-				"buffer_size": 1382,
+				"buffer_size": 5339,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "src/game/Adventurer.scala",
+			"file": "src/main/scala/world/Location.scala",
 			"settings":
 			{
-				"buffer_size": 227,
+				"buffer_size": 480,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"contents": "package game\n\nimport adventure.MysteriousBeach\nimport world.Location\n\nobject Shell extends App {\n  private var adventuring = true\n  private val adventure = MysteriousBeach\n\n  class ShellAdventurer(var adventurer: Adventurer) {\n\n    var inventory = Set()\n\n    def exits {\n      if (adventurer.currentLocation.hasExits) {\n        println(\"You can travel:\")\n        adventurer.currentLocation.exits foreach { case (exitLabel: String, location: Location) => println(s\"* $exitLabel -> ${location.name}\") }\n      } else {\n        println(\"There are no apparent exits...\")\n      }\n    }\n\n    def showLocation {\n      println(adventurer.currentLocation.description)\n      if (adventurer.currentLocation.hasItems) {\n        println(\"\\nYou see the following items:\")\n        adventurer.currentLocation.items foreach { i => println(s\"* ${i.label}\") }\n      }\n    }\n\n    def look {\n      showLocation\n      if (adventure.displayExitsOnLook) {\n        println()\n        exits\n      }\n    }\n\n    def stopAdventuring = adventuring = false\n\n    def examine(itemNameParts: List[String]) = itemNameParts match {\n      case List(\"me\") => println(adventurer.description)\n      case List() =>\n        println(\"What would you like to examine?\")\n      case List(_*) => {\n        val itemName = itemNameParts.mkString(\" \")\n        adventurer.currentLocation.findNamedItem(itemName) match {\n          case List(foundItem) => println(foundItem.description)\n          case List(_, _*) => println(s\"There is more than one $itemName. You need to be more specific.\")\n          case _ => println(\"I don't know what that is.\")\n        }\n      }\n    }\n\n    def move(exitNameParts: List[String]) {\n      if (!exitNameParts.isEmpty) {\n\n        adventurer.currentLocation.findNamedExit(exitNameParts.head) match {\n          case Some(location) => {\n            adventurer.moveTo(location)\n            showLocation\n          }\n          case _ => invalidDestination\n        }\n      } else println(\"Where do you want to go?\")\n    }\n\n    def useExit(mightBeAnExitName: String) {\n      adventurer.currentLocation.exits.get(mightBeAnExitName) match {\n        case Some(destination) => {\n          adventurer.moveTo(destination)\n          showLocation\n        }\n        case _ => invalidDestination\n      }\n    }\n\n    def take(itemNameParts: List[String]) {\n      itenNameParts match {\n        case Nil => println(\"What do you want to take?\"\n        case List(_*) => {\n          val itemName = itemNameParts.mkString(\" \")\n            adventurer.currentLocation.findNamedItem(itemName) match {\n            case List(foundItem) => inventory += foundItem\n            case List(_, _*) => println(s\"There is more than one $itemName. You need to be more specific.\")\n            case _ => println(\"I don't know what that is.\")\n          }\n        }\n      )\n    }\n\n    def invalidAction = println(\"You don't know how to do that.\")\n\n    def invalidDestination = println(\"You can't go that way.\")\n\n  }\n  private val avatar = new ShellAdventurer(adventure.begin)\n\n  avatar.showLocation\n\n  do {\n\n    Console.print(\"\\n> \")\n    val playerInput = Console.readLine.trim.toLowerCase()\n    Console.println\n\n    val inputTokens: List[String] = playerInput.split(\"\\\\s+\").toList\n\n    inputTokens match {\n      case List(\"quit\") => avatar.stopAdventuring\n      case List(\"look\") => avatar.look\n      case \"examine\" :: itemNameParts => avatar.examine(itemNameParts)\n      case \"go\" :: exitNameParts => avatar.move(exitNameParts)\n      case \"walk\" :: exitNameParts => avatar.move(exitNameParts)\n      case List(\"exits\") => avatar.exits\n      case List(\"\") => Unit\n      case List(\"help\") => showCommands\n      case List(\"commands\") => showCommands\n      case List(\"north\") => avatar.useExit(\"north\")\n      case List(\"south\") => avatar.useExit(\"south\")\n      case List(\"east\") => avatar.useExist(\"east\")\n      case List(\"west\") => avatar.useExist(\"west\")\n      case _ => avatar.invalidAction\n    }\n\n  } while (adventuring)\n\n  println(\"You'll never win that way.\")\n\n  def showCommands {\n    println(\"quit, look, examine, go, walk, north, south, exits, help, commands\")\n  }\n\n}",
-			"file": "src/game/Shell.scala",
-			"file_size": 4107,
-			"file_write_time": 1396193038000000,
+			"file": "src/main/scala/adventure/MysteriousBeach.scala",
 			"settings":
 			{
-				"buffer_size": 4107,
+				"buffer_size": 1418,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/main/scala/world/Item.scala",
+			"settings":
+			{
+				"buffer_size": 616,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/main/scala/world/ItemContainer.scala",
+			"settings":
+			{
+				"buffer_size": 824,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/main/scala/game/Adventurer.scala",
+			"settings":
+			{
+				"buffer_size": 349,
 				"line_ending": "Unix"
 			}
 		}
@@ -38,11 +63,15 @@
 	"build_system": "",
 	"command_palette":
 	{
-		"height": 0.0,
+		"height": 47.0,
 		"selected_items":
 		[
+			[
+				"packag",
+				"Preferences: Browse Packages"
+			]
 		],
-		"width": 0.0
+		"width": 392.0
 	},
 	"console":
 	{
@@ -59,10 +88,13 @@
 	},
 	"file_history":
 	[
+		"/Users/remotenemesis/projects/adventurer/src/adventure/MysteriousBeach.scala",
+		"/Users/remotenemesis/projects/adventurer/src/game/Adventurer.scala",
+		"/Users/remotenemesis/projects/adventurer/src/game/Shell.scala"
 	],
 	"find":
 	{
-		"height": 0.0
+		"height": 35.0
 	},
 	"find_in_files":
 	{
@@ -76,6 +108,7 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"exits"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -93,23 +126,23 @@
 	"groups":
 	[
 		{
-			"selected": 2,
+			"selected": 4,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "src/adventure/MysteriousBeach.scala",
+					"file": "src/main/scala/game/Shell.scala",
 					"settings":
 					{
-						"buffer_size": 1382,
+						"buffer_size": 5339,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								167,
-								167
+								3436,
+								3436
 							]
 						],
 						"settings":
@@ -118,31 +151,33 @@
 							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
-						"translation.x": 27.0,
-						"translation.y": 52.0,
+						"translation.x": 0.0,
+						"translation.y": 1100.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "src/game/Adventurer.scala",
+					"file": "src/main/scala/world/Location.scala",
 					"settings":
 					{
-						"buffer_size": 227,
+						"buffer_size": 480,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								276,
+								276
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Scala/Scala.tmLanguage"
+							"syntax": "Packages/Scala/Scala.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -152,18 +187,18 @@
 				},
 				{
 					"buffer": 2,
-					"file": "src/game/Shell.scala",
+					"file": "src/main/scala/adventure/MysteriousBeach.scala",
 					"settings":
 					{
-						"buffer_size": 4107,
+						"buffer_size": 1418,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2609,
-								2609
+								1279,
+								1279
 							]
 						],
 						"settings":
@@ -172,8 +207,90 @@
 							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
-						"translation.x": 8.0,
-						"translation.y": 799.0,
+						"translation.x": 0.0,
+						"translation.y": 67.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "src/main/scala/world/Item.scala",
+					"settings":
+					{
+						"buffer_size": 616,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								179,
+								179
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Scala/Scala.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "src/main/scala/world/ItemContainer.scala",
+					"settings":
+					{
+						"buffer_size": 824,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								484,
+								484
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Scala/Scala.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "src/main/scala/game/Adventurer.scala",
+					"settings":
+					{
+						"buffer_size": 349,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								346,
+								346
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Scala/Scala.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
