@@ -12,18 +12,10 @@
 	"buffers":
 	[
 		{
-			"file": "src/main/scala/game/Shell.scala",
+			"file": "build.sbt",
 			"settings":
 			{
-				"buffer_size": 5339,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "src/main/scala/world/Location.scala",
-			"settings":
-			{
-				"buffer_size": 480,
+				"buffer_size": 188,
 				"line_ending": "Unix"
 			}
 		},
@@ -34,48 +26,36 @@
 				"buffer_size": 1418,
 				"line_ending": "Unix"
 			}
-		},
-		{
-			"file": "src/main/scala/world/Item.scala",
-			"settings":
-			{
-				"buffer_size": 616,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "src/main/scala/world/ItemContainer.scala",
-			"settings":
-			{
-				"buffer_size": 824,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "src/main/scala/game/Adventurer.scala",
-			"settings":
-			{
-				"buffer_size": 349,
-				"line_ending": "Unix"
-			}
 		}
 	],
 	"build_system": "",
 	"command_palette":
 	{
-		"height": 47.0,
+		"height": 307.0,
 		"selected_items":
 		[
+			[
+				"sbt:",
+				"SBT: Compile"
+			],
+			[
+				"sbt",
+				"Set Syntax: BibTeX"
+			],
 			[
 				"packag",
 				"Preferences: Browse Packages"
 			]
 		],
-		"width": 392.0
+		"width": 449.0
 	},
 	"console":
 	{
-		"height": 0.0
+		"height": 0.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = 'eb2297e1a458f27d836c04bb0cbaf282' + 'd0e7a3098092775ccb37ca9d6b2e4b7d'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
 	},
 	"distraction_free":
 	{
@@ -86,6 +66,15 @@
 		"side_bar_visible": false,
 		"status_bar_visible": false
 	},
+	"expanded_folders":
+	[
+		"/Users/remotenemesis/projects/adventurer",
+		"/Users/remotenemesis/projects/adventurer/project/project",
+		"/Users/remotenemesis/projects/adventurer/src",
+		"/Users/remotenemesis/projects/adventurer/src/main",
+		"/Users/remotenemesis/projects/adventurer/src/main/scala",
+		"/Users/remotenemesis/projects/adventurer/src/main/scala/adventure"
+	],
 	"file_history":
 	[
 		"/Users/remotenemesis/projects/adventurer/src/adventure/MysteriousBeach.scala",
@@ -94,7 +83,7 @@
 	],
 	"find":
 	{
-		"height": 35.0
+		"height": 23.0
 	},
 	"find_in_files":
 	{
@@ -126,68 +115,41 @@
 	"groups":
 	[
 		{
-			"selected": 4,
+			"selected": 1,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "src/main/scala/game/Shell.scala",
+					"file": "build.sbt",
+					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 5339,
+						"buffer_size": 188,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								3436,
-								3436
+								186,
+								186
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Scala/Scala.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 1100.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "src/main/scala/world/Location.scala",
-					"settings":
-					{
-						"buffer_size": 480,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								276,
-								276
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Scala/Scala.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
+							"syntax": "Packages/Text/Plain text.tmLanguage"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
-					"buffer": 2,
+					"buffer": 1,
 					"file": "src/main/scala/adventure/MysteriousBeach.scala",
+					"semi_transient": true,
 					"settings":
 					{
 						"buffer_size": 1418,
@@ -197,36 +159,8 @@
 						"selection":
 						[
 							[
-								1279,
-								1279
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Scala/Scala.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 67.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "src/main/scala/world/Item.scala",
-					"settings":
-					{
-						"buffer_size": 616,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								179,
-								179
+								289,
+								289
 							]
 						],
 						"settings":
@@ -239,60 +173,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "src/main/scala/world/ItemContainer.scala",
-					"settings":
-					{
-						"buffer_size": 824,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								484,
-								484
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Scala/Scala.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "src/main/scala/game/Adventurer.scala",
-					"settings":
-					{
-						"buffer_size": 349,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								346,
-								346
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Scala/Scala.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
+					"stack_index": 0,
 					"type": "text"
 				}
 			]
@@ -300,7 +181,7 @@
 	],
 	"incremental_find":
 	{
-		"height": 0.0
+		"height": 23.0
 	},
 	"input":
 	{
@@ -329,9 +210,22 @@
 		]
 	},
 	"menu_visible": true,
-	"replace":
+	"output.find_results":
 	{
 		"height": 0.0
+	},
+	"output.sbt":
+	{
+		"height": 100.0
+	},
+	"output.sbt_error":
+	{
+		"height": 0.0
+	},
+	"project": "adventurer.sublime-project",
+	"replace":
+	{
+		"height": 42.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -350,10 +244,25 @@
 		],
 		"width": 0.0
 	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
 	"show_minimap": true,
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
 	"side_bar_width": 232.0,
-	"status_bar_visible": true
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
 }

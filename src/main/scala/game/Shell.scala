@@ -96,10 +96,10 @@ object Shell extends App {
 
     def drop(itemNameParts: List[String]) {
       itemNameParts match {
-        case Nil => println("What do you want to take?")
+        case Nil => println("What do you want to drop?")
         case List(_*) => {
           val itemName = itemNameParts.mkString(" ")
-            Item.findNamedItem(itemName, adventurer.items) match {
+            adventurer.findNamedItem(itemName) match {
             case List(foundItem) => {
               adventurer.currentLocation.addItem(foundItem)
               adventurer.removeItem(foundItem)
@@ -107,6 +107,22 @@ object Shell extends App {
             }
             case List(_, _*) => println(s"You are carrying than one $itemName. You need to be more specific.")
             case _ => println("You are not carrying that.")
+          }
+        }
+      }
+    }
+
+    def useItem(itemNameParts: List[String]) {
+      itemNameParts match {
+        case Nil => println("What do you want to use?")
+        case List(_*) => {
+          val itemName = itemNameParts.mkString(" ")
+            adventurer.findNamedItem(itemName) match {
+            case List(foundItem) => {
+              println(s"You use the $itemName. Nothing happens")
+            }
+            case List(_, _*) => println(s"You are carrying more than one $itemName. You need to be more specific.")
+            case _ => println("You aren't carrying that.")
           }
         }
       }
@@ -150,6 +166,7 @@ object Shell extends App {
       case "take" :: itemNameParts => avatar.take(itemNameParts)
       case "drop" :: itemNameParts => avatar.drop(itemNameParts)
       case List("inventory") => avatar.listInventory
+      case "use" :: itemNameParts => avatar.useItem(itemNameParts)
       case _ => avatar.invalidAction
     }
 
@@ -158,7 +175,7 @@ object Shell extends App {
   println("You'll never win that way.")
 
   def showCommands {
-    println("quit, look, examine, go, walk, north, south, exits, help, commands")
+    println("quit, look, examine, take, drop, use, go, walk, north, south, exits, help, commands")
   }
 
 }

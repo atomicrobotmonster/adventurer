@@ -1,7 +1,9 @@
 {
-  "folders":[{
-    "path":"/Users/remotenemesis/projects/adventurer"
-  },{
-    "path":"/Users/remotenemesis/projects/adventurer/target/External Libraries"
-  }]
+	"folders":
+	[
+		{
+			"follow_symlinks": true,
+			"path": "."
+		}
+	]
 }

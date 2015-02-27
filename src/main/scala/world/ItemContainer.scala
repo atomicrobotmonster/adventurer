@@ -14,7 +14,7 @@ trait ItemContainer {
       val noun = nameParts.last
 
       contents.filter { item => adjectives.subsetOf(item.adjectives) && item.noun == noun } toList
-    } else List()
+    } else Nil
   }
 
   def removeItem(item: Item) {
