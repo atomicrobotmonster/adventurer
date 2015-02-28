@@ -2,7 +2,7 @@ package game
 
 import adventure.MysteriousBeach
 import world.Location
-import world.Item
+import world.{Item, Usable}
 
 import scala.collection.immutable.ListSet
 import scala.io.StdIn
@@ -130,9 +130,8 @@ object Shell extends App {
         case List(_*) => {
           val itemName = itemNameParts.mkString(" ")
             adventurer.findNamedItem(itemName) match {
-            case List(foundItem) => {
-              println(s"You use the $itemName. Nothing happens")
-            }
+            case List(usableItem: Usable) => usableItem.use
+            case List(unusableItem) => println(s"You use the $itemName. Nothing happens")
             case List(_, _*) => println(s"You are carrying more than one $itemName. You need to be more specific.")
             case _ => println("You aren't carrying that.")
           }

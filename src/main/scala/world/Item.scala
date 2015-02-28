@@ -18,7 +18,20 @@ object Item {
   }
 }
 
-case class Item(label: String, adjectives: Set[String], noun: String, description: String) {
-
-
+/**
+ * Mixin for items to usable in isolation.
+ */
+trait Usable {
+  self: Item =>
+  def use: Unit
 }
+
+/**
+ * Mixin for items usable only in conjunction with another item.
+ */
+trait UsableWith {
+  self: Item =>
+  def useWith(otherItem: Item): Unit
+}
+
+class Item(val label: String, val adjectives: Set[String], val noun: String, val description: String)

@@ -2,7 +2,7 @@ package adventure
 
 import game.Adventurer
 import world.Location
-import world.Item
+import world.{Item, Usable}
 
 import scala.collection.immutable.ListSet
 
@@ -10,17 +10,22 @@ object MysteriousBeach {
 
   val displayExitsOnLook = true
   
-  val oldBottle = Item(
+  val oldBottle = new Item(
     label = "Old glass bottle",
     adjectives = Set("glass", "old"),
     noun = "bottle",
     description = "A clear blue-glass bottle, stoppered with a cork. There's a piece of paper inside.")
 
-  val emptyBottle = Item(
+  val emptyBottle = new Item(
     label = "Empty glass whiskey bottle",
     adjectives = Set("empty", "glass", "whiskey"),
     noun = "bottle",
-    description = "An empty bottle with a sun-bleached label indicating the bottle once contained whiskey.")
+    description = "An empty bottle with a sun-bleached label indicating the bottle once contained whiskey.") with Usable {
+    
+    def use: Unit = {
+      println("You try to drain the bottle but there's nothing left.")
+    }
+  }
 
   val tranquilCove = Location(
     name = "Tranquil Cove",
