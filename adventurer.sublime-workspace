@@ -20,10 +20,26 @@
 			}
 		},
 		{
-			"file": "src/main/scala/adventure/MysteriousBeach.scala",
+			"file": "src/main/scala/game/Adventurer.scala",
 			"settings":
 			{
-				"buffer_size": 1418,
+				"buffer_size": 349,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/main/scala/world/ItemContainer.scala",
+			"settings":
+			{
+				"buffer_size": 821,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/main/scala/game/Shell.scala",
+			"settings":
+			{
+				"buffer_size": 6002,
 				"line_ending": "Unix"
 			}
 		}
@@ -31,16 +47,24 @@
 	"build_system": "",
 	"command_palette":
 	{
-		"height": 307.0,
+		"height": 392.0,
 		"selected_items":
 		[
 			[
-				"sbt:",
-				"SBT: Compile"
+				"sbt",
+				"SBT: Start Continuous Compiling"
 			],
 			[
-				"sbt",
-				"Set Syntax: BibTeX"
+				"sbt: ",
+				"SBT: Show SBT Output"
+			],
+			[
+				"sbt: ru",
+				"SBT: Run"
+			],
+			[
+				"sbt:",
+				"SBT: Compile"
 			],
 			[
 				"packag",
@@ -69,21 +93,27 @@
 	"expanded_folders":
 	[
 		"/Users/remotenemesis/projects/adventurer",
-		"/Users/remotenemesis/projects/adventurer/project/project",
 		"/Users/remotenemesis/projects/adventurer/src",
 		"/Users/remotenemesis/projects/adventurer/src/main",
 		"/Users/remotenemesis/projects/adventurer/src/main/scala",
-		"/Users/remotenemesis/projects/adventurer/src/main/scala/adventure"
+		"/Users/remotenemesis/projects/adventurer/src/main/scala/game"
 	],
 	"file_history":
 	[
+		"/Users/remotenemesis/projects/adventurer/.gitignore",
+		"/Users/remotenemesis/projects/adventurer/adventurer.sublime-project",
+		"/Users/remotenemesis/projects/adventurer/README.md",
+		"/Users/remotenemesis/projects/adventurer/project/plugins.sbt",
+		"/Users/remotenemesis/projects/adventurer/project/project/target/config-classes/$d59c8d8bdf5be5f43523.cache",
+		"/Users/remotenemesis/projects/adventurer/project/target/config-classes/$19111be2c161be182993.cache",
+		"/Users/remotenemesis/projects/adventurer/project/target/resolution-cache/default/adventurer-build/scala_2.10/sbt_0.13/0.1-SNAPSHOT/resolved.xml.properties",
 		"/Users/remotenemesis/projects/adventurer/src/adventure/MysteriousBeach.scala",
 		"/Users/remotenemesis/projects/adventurer/src/game/Adventurer.scala",
 		"/Users/remotenemesis/projects/adventurer/src/game/Shell.scala"
 	],
 	"find":
 	{
-		"height": 23.0
+		"height": 35.0
 	},
 	"find_in_files":
 	{
@@ -97,6 +127,7 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"drop",
 			"exits"
 		],
 		"highlight": true,
@@ -115,7 +146,7 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 3,
 			"sheets":
 			[
 				{
@@ -143,24 +174,52 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 3,
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "src/main/scala/adventure/MysteriousBeach.scala",
-					"semi_transient": true,
+					"file": "src/main/scala/game/Adventurer.scala",
+					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1418,
+						"buffer_size": 349,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								289,
-								289
+								185,
+								185
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Scala/Scala.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "src/main/scala/world/ItemContainer.scala",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 821,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								477,
+								477
 							]
 						],
 						"settings":
@@ -171,6 +230,36 @@
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "src/main/scala/game/Shell.scala",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 6002,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3384,
+								3384
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Scala/Scala.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1102.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
@@ -246,11 +335,15 @@
 	},
 	"select_symbol":
 	{
-		"height": 0.0,
+		"height": 392.0,
 		"selected_items":
 		[
+			[
+				"",
+				"ItemContainer"
+			]
 		],
-		"width": 0.0
+		"width": 392.0
 	},
 	"selected_group": 0,
 	"settings":
