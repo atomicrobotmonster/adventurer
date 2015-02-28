@@ -142,6 +142,34 @@ object Shell extends App {
 
   avatar.showLocation
 
+  type CommandHandler = PartialFunction[List[String],Unit]
+
+  val list:      CommandHandler = { case List("quit") | List("exit") => avatar.stopAdventuring }
+  val look:      CommandHandler = { case List("look") => avatar.look } 
+  val examine:   CommandHandler = { case "examine" :: itemNameParts => avatar.examine(itemNameParts) }
+  val go:        CommandHandler = { case "go" :: exitNameParts => avatar.move(exitNameParts) }
+  val walk:      CommandHandler = { case "walk" :: exitNameParts => avatar.move(exitNameParts) }
+  val exits:     CommandHandler = { case List("exits") => avatar.exits }
+  val north:     CommandHandler = { case List("north") => avatar.useExit("north") }
+  val south:     CommandHandler = { case List("south") => avatar.useExit("south") }
+  val east:      CommandHandler = { case List("east") => avatar.useExit("east") }
+  val west:      CommandHandler = { case List("west") => avatar.useExit("west") }
+  val take:      CommandHandler = { case "take" :: itemNameParts => avatar.take(itemNameParts) }
+  val drop:      CommandHandler = { case "drop" :: itemNameParts => avatar.drop(itemNameParts) }
+  val inventory: CommandHandler = { case List("inventory") => avatar.listInventory }
+  val use:       CommandHandler = { case "use" :: itemNameParts => avatar.useItem(itemNameParts) }
+
+
+  val nada:      CommandHandler = { case List("") => Unit }
+  val help:      CommandHandler = { case List("help") | List("commands") => showCommands }
+  val unknown:   CommandHandler = { case _ => avatar.invalidAction }
+  
+  val standardCommands = List(help, nada, unknown)
+  val gameCommands = List(list, look, examine, go, walk, exits, north, south, east, west, take, drop, inventory, use)
+
+  val parseCommand = (gameCommands ++ standardCommands) reduceLeft { _ orElse _ }
+
+
   do {
 
     Console.print("\n> ")
@@ -150,6 +178,9 @@ object Shell extends App {
 
     val inputTokens: List[String] = playerInput.split("\\s+").toList
 
+    parseCommand(inputTokens)
+
+    /*
     inputTokens match {
       case List("quit") | List("exit") => avatar.stopAdventuring
       case List("look") => avatar.look
@@ -168,7 +199,7 @@ object Shell extends App {
       case List("inventory") => avatar.listInventory
       case "use" :: itemNameParts => avatar.useItem(itemNameParts)
       case _ => avatar.invalidAction
-    }
+    }*/
 
   } while (adventuring)
 
