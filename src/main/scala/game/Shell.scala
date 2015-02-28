@@ -148,10 +148,71 @@ object Shell extends App {
     def invalidDestination: Unit = println("You can't go that way.")
   }
   
+  
+
   type CommandHandler = PartialFunction[List[String],Unit]
 
   case class Command(verbs: List[String], handler: CommandHandler)
   
+  private def parserCommands(avatar: ShellAdventurer): List[Command] = {
+    val quit = Command(
+      verbs = List("quit","exit"),
+      handler = { case List("quit") | List("exit") => avatar.stopAdventuring }
+    ) 
+
+    val look = Command(
+      verbs = List("look"),
+      handler = { case List("look") => avatar.look } 
+    )
+
+    val examine = Command(
+      verbs = List("examine"),
+      handler = { case "examine" :: itemNameParts => avatar.examine(itemNameParts) }
+    )
+
+    val go = Command(
+      verbs = List("go"),
+      handler = { case "go" :: exitNameParts => avatar.move(exitNameParts) }
+    )
+
+    val walk = Command(
+      verbs = List("walk"),
+      handler = { case "walk" :: exitNameParts => avatar.move(exitNameParts) }
+    )
+
+    val exits = Command(
+      verbs = List("exits"),
+      handler = { case List("exits") => avatar.exits }
+    )
+
+   val compassRose = Command(
+      verbs = List("north","south","east","west"),
+      handler = { case token @ (List("north") | List("south") | List("east") | List("west")) => avatar.useExit(token.head) }
+    )
+
+    val take = Command( 
+      verbs = List("take"),
+      handler = { case "take" :: itemNameParts => avatar.take(itemNameParts) }
+    )
+
+    val drop = Command(
+      verbs = List("drop"),
+      handler = { case "drop" :: itemNameParts => avatar.drop(itemNameParts) }
+    )
+
+    val inventory = Command(
+      verbs = List("inventory"),
+      handler = { case List("inventory") => avatar.listInventory }
+    )
+
+    val use = Command(
+      verbs = List("use"),
+      handler = { case "use" :: itemNameParts => avatar.useItem(itemNameParts) }
+    )
+    
+    List(quit, look, examine, go, walk, exits, compassRose, take, drop, inventory, use)  
+  }
+
   private def parserOf(commands: Command*): CommandHandler = {
     val gameHandlers = commands map {_.handler}
     
@@ -165,85 +226,14 @@ object Shell extends App {
 
   private def getInputTokens: List[String] = {
     print("\n> ")
-    val playerInput = StdIn.readLine.trim.toLowerCase()
+    val playerInput = StdIn.readLine.trim.toLowerCase
     println
 
     playerInput.split("\\s+").toList
   }
 
   val avatar = new ShellAdventurer(adventure.begin)
-
-  val quit = Command(
-    verbs = List("quit","look"),
-    handler = { case List("quit") | List("exit") => avatar.stopAdventuring }
-  ) 
-
-  val look = Command(
-    verbs = List("look"),
-    handler = { case List("look") => avatar.look } 
-  )
-
-  val examine = Command(
-    verbs = List("examine"),
-    handler = { case "examine" :: itemNameParts => avatar.examine(itemNameParts) }
-  )
-
-  val go = Command(
-    verbs = List("go"),
-    handler = { case "go" :: exitNameParts => avatar.move(exitNameParts) }
-  )
-
-  val walk = Command(
-    verbs = List("walk"),
-    handler = { case "walk" :: exitNameParts => avatar.move(exitNameParts) }
-  )
-
-  val exits = Command(
-    verbs = List("exits"),
-    handler = { case List("exits") => avatar.exits }
-  )
-
-  val north = Command(
-    verbs = List("north"),
-    handler = { case List("north") => avatar.useExit("north") }
-  )
-
-  val south = Command(
-    verbs = List("south"),
-    handler = { case List("south") => avatar.useExit("south") }
-  )
-
-  val east = Command(
-    verbs = List("east"),
-    handler = { case List("east") => avatar.useExit("east") }
-  )
-
-  val west = Command(
-    verbs = List("west"),
-    handler = { case List("west") => avatar.useExit("west") }
-  )
-
-  val take = Command( 
-    verbs = List("take"),
-    handler = { case "take" :: itemNameParts => avatar.take(itemNameParts) }
-  )
-
-  val drop = Command(
-    verbs = List("drop"),
-    handler = { case "drop" :: itemNameParts => avatar.drop(itemNameParts) }
-  )
-
-  val inventory = Command(
-    verbs = List("inventory"),
-    handler = { case List("inventory") => avatar.listInventory }
-  )
-
-  val use = Command(
-    verbs = List("use"),
-    handler = { case "use" :: itemNameParts => avatar.useItem(itemNameParts) }
-  )
-
-  val parseCommand = parserOf(quit, look, examine, go, walk, exits, north, south, east, west, take, drop, inventory, use)
+  val parseCommand = parserOf(parserCommands(avatar):_*)
   
   avatar.startAdventuring
   do parseCommand(getInputTokens) while (avatar.isAdventuring)
