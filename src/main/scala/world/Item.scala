@@ -23,7 +23,7 @@ object Item {
  */
 trait Usable {
   self: Item =>
-  def use: Unit
+  def use(): Unit
 }
 
 /**

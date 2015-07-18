@@ -3,5 +3,5 @@ lazy val root = (project in file(".")).
     name := "adventurer", 
     version := "0.1",
     scalaVersion := "2.11.5",
-    scalacOptions ++= Seq("-unchecked", "-deprecation")
+    scalacOptions ++= Seq("-Xlint", "-unchecked", "-deprecation")
 )

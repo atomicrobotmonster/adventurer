@@ -14,19 +14,19 @@ object Shell extends App {
 
     private var adventuring = false
 
-    def startAdventuring: Unit = {
+    def startAdventuring(): Unit = {
       adventuring = true
       showLocation
     }
 
-    def stopAdventuring: Unit = {
+    def stopAdventuring(): Unit = {
       adventuring = false
       println("You'll never win that way.")
     }
 
     def isAdventuring: Boolean = adventuring
 
-    def exits: Unit = {
+    def exits(): Unit = {
       if (adventurer.currentLocation.hasExits) {
         println("You can travel:")
         adventurer.currentLocation.exits foreach { case (exitLabel: String, location: Location) => println(s"* $exitLabel -> ${location.name}") }
@@ -35,7 +35,7 @@ object Shell extends App {
       }
     }
 
-    def showLocation: Unit = {
+    def showLocation(): Unit = {
       println(adventurer.currentLocation.description)
       if (adventurer.currentLocation.hasItems) {
         println("\nYou see the following items:")
@@ -43,7 +43,7 @@ object Shell extends App {
       }
     }
 
-    def look: Unit = {
+    def look(): Unit = {
       showLocation
       if (adventure.displayExitsOnLook) {
         println()
@@ -139,12 +139,12 @@ object Shell extends App {
       }
     }
 
-    def listInventory: Unit = {
+    def listInventory(): Unit = {
         println("You are carrying:")
         adventurer.contents foreach { item => println(s"* ${item.label}") }
     }
 
-    def invalidDestination: Unit = println("You can't go that way.")
+    def invalidDestination(): Unit = println("You can't go that way.")
   }
   
   

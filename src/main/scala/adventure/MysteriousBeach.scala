@@ -22,7 +22,7 @@ object MysteriousBeach {
     noun = "bottle",
     description = "An empty bottle with a sun-bleached label indicating the bottle once contained whiskey.") with Usable {
     
-    def use: Unit = {
+    def use(): Unit = {
       println("You try to drain the bottle but there's nothing left.")
     }
   }
