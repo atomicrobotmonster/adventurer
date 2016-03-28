@@ -1,130 +1,204 @@
 package game
 
 import adventure.MysteriousBeach
-import world.Location
-import world.{Item, Usable}
+import world._
 
 import scala.collection.immutable.ListSet
 import scala.io.StdIn
 
-object Shell extends App {
-  private val adventure = MysteriousBeach
+import scala.util.{Try,Success,Failure}
 
-  class ShellAdventurer(var adventurer: Adventurer) {
+object Shell extends App {
+ 
+  class ShellParser(adventure: Adventure) {
+    var adventurer = adventure.begin
 
     private var adventuring = false
 
-    def startAdventuring(): Unit = {
-      adventuring = true
-      showLocation
+    val parseCommand = parserOf(parserCommands(this):_*)
+  
+    startAdventuring
+    do {
+      adventurer = parseCommand(getInputTokens)
+    } while (isAdventuring)
+
+    private def parserOf(commands: Command*): CommandHandler = {
+      val gameHandlers = commands map {_.handler}
+      
+      val baseHandlers = List[CommandHandler](
+        { case List("help") | List("commands") => 
+            println ((commands flatMap {_.verbs}) ++ List("help", "commands") mkString ", ")
+            adventurer 
+        },
+        { case List("") => adventurer }, 
+        { case _ => 
+            println("You don't know how to do that.")
+            adventurer 
+        })
+
+      (gameHandlers ++ baseHandlers) reduceLeft { _ orElse _ }
     }
 
-    def stopAdventuring(): Unit = {
+    private def getInputTokens: List[String] = {
+      print("\n> ")
+      val playerInput = StdIn.readLine.trim.toLowerCase
+      println
+
+      playerInput.split("\\s+").toList
+    }
+
+    def startAdventuring(): Unit = {
+      adventuring = true
+      showLocation(adventurer)
+    }
+
+    def stopAdventuring(): Adventurer = {
       adventuring = false
       println("You'll never win that way.")
+      adventurer
     }
 
     def isAdventuring: Boolean = adventuring
 
-    def exits(): Unit = {
+    def exits(): Adventurer = {
       if (adventurer.currentLocation.hasExits) {
         println("You can travel:")
-        adventurer.currentLocation.exits foreach { case (exitLabel: String, location: Location) => println(s"* $exitLabel -> ${location.name}") }
+        adventurer.currentLocation.exits foreach { 
+          case (exitLabel: String, locationKey: LocationKey) => 
+            val location = adventurer.world.locations(locationKey)
+            println(s"* $exitLabel -> ${location.name}") 
+        }
       } else {
         println("There are no apparent exits...")
       }
+      adventurer
     }
 
-    def showLocation(): Unit = {
+    def showLocation(adventurer: Adventurer): Unit = {
       println(adventurer.currentLocation.description)
       if (adventurer.currentLocation.hasItems) {
         println("\nYou see the following items:")
-        adventurer.currentLocation.contents foreach { i => println(s"* ${i.label}") }
+        adventurer.currentLocation.items foreach { i => println(s"* ${i.label}") }
       }
     }
 
-    def look(): Unit = {
-      showLocation
+    def look(): Adventurer = {
+      showLocation(adventurer)
       if (adventure.displayExitsOnLook) {
         println()
         exits
       }
+      adventurer
     }
 
-    def examine(itemNameParts: List[String]): Unit = itemNameParts match {
-      case List("me") => println(adventurer.description)
-      case List() =>
-        println("What would you like to examine?")
-      case List(_*) => {
-        val itemName = itemNameParts.mkString(" ")
-          Item.findNamedItem(itemName, adventurer.currentLocation.items ++ adventurer.items) match {
-          case List(foundItem) => println(foundItem.description)
-          case List(_, _*) => println(s"There is more than one $itemName. You need to be more specific.")
-          case _ => println("I don't know what that is.")
+    def examine(itemNameParts: List[String]): Adventurer = { 
+      itemNameParts match {
+        case List("me") => println(adventurer.description)
+        case List() =>
+          println("What would you like to examine?")
+        case List(_*) => {
+          val itemName = itemNameParts.mkString(" ")
+            Item.findNamedItem(itemName, adventurer.currentLocation.items ++ adventurer.items) match {
+            case List(foundItem) => println(foundItem.description)
+            case List(_, _*) => println(s"There is more than one $itemName. You need to be more specific.")
+            case _ => println("I don't know what that is.")
+          }
         }
+      }
+      adventurer
+    }
+
+    def move(exitNameParts: List[String]): Adventurer = {
+      if (!exitNameParts.isEmpty) {
+        adventurer.currentLocation.findNamedExit(exitNameParts.head) match {
+          case Some(locationKey) => {
+            adventurer.moveTo(locationKey) match {
+              case Success(newAdventurer) =>
+                showLocation(newAdventurer)
+                newAdventurer
+              case Failure(_) =>
+                println("Something is wrong. Can't move to that location.")
+                adventurer
+            }
+          }
+          case _ => {
+            invalidDestination
+            adventurer
+          }
+        }
+      } else {
+        println("Where do you want to go?")
+        adventurer
       }
     }
 
-    def move(exitNameParts: List[String]): Unit = {
-      if (!exitNameParts.isEmpty) {
-
-        adventurer.currentLocation.findNamedExit(exitNameParts.head) match {
-          case Some(location) => {
-            adventurer.moveTo(location)
-            showLocation
-          }
-          case _ => invalidDestination
-        }
-      } else println("Where do you want to go?")
-    }
-
-    def useExit(mightBeAnExitName: String): Unit = {
+    def useExit(mightBeAnExitName: String): Adventurer = {
       adventurer.currentLocation.exits.get(mightBeAnExitName) match {
         case Some(destination) => {
-          adventurer.moveTo(destination)
-          showLocation
+          adventurer.moveTo(destination) match {
+            case Success(newAdventurer) =>           
+              showLocation(newAdventurer)
+              newAdventurer
+            case Failure(_) =>
+              println("Something is wrong. Can't move to that location.")
+              adventurer
+          }
         }
-        case _ => invalidDestination
+        case _ => { 
+          invalidDestination
+          adventurer
+        }
       }
     }
 
-    def take(itemNameParts: List[String]): Unit = {
+    def take(itemNameParts: List[String]): Adventurer = {
       itemNameParts match {
-        case Nil => println("What do you want to take?")
+        case Nil => 
+          println("What do you want to take?")
+          adventurer
         case List(_*) => {
           val itemName = itemNameParts.mkString(" ")
             adventurer.currentLocation.findNamedItem(itemName) match {
             case List(foundItem) => {
-              adventurer.currentLocation.removeItem(foundItem)
-              adventurer.addItem(foundItem)
+              val modifiedAdventurer = adventurer.takeItem(foundItem)
               println(s"You take the $itemName.")
+              modifiedAdventurer
             }
-            case List(_, _*) => println(s"There is more than one $itemName. You need to be more specific.")
-            case _ => println("You don't see that here.")
+            case List(_, _*) => 
+              println(s"There is more than one $itemName. You need to be more specific.")
+              adventurer
+            case _ => 
+              println("You don't see that here.")
+              adventurer
           }
         }
       }
     }
 
-    def drop(itemNameParts: List[String]): Unit = {
+    def drop(itemNameParts: List[String]): Adventurer = {
       itemNameParts match {
-        case Nil => println("What do you want to drop?")
+        case Nil => 
+          println("What do you want to drop?")
+          adventurer
         case List(_*) => {
           val itemName = itemNameParts.mkString(" ")
-            adventurer.findNamedItem(itemName) match {
+          adventurer.findNamedItem(itemName) match {
             case List(foundItem) => {
-              adventurer.currentLocation.addItem(foundItem)
-              adventurer.removeItem(foundItem)
+              val modifiedAdventurer = adventurer.dropItem(foundItem)
               println(s"You drop the $itemName.")
+              modifiedAdventurer
             }
-            case List(_, _*) => println(s"You are carrying than one $itemName. You need to be more specific.")
+            case List(_, _*) => 
+              println(s"You are carrying than one $itemName. You need to be more specific.")
+              adventurer
             case _ => println("You are not carrying that.")
+              adventurer
           }
         }
       }
     }
 
-    def useItem(itemNameParts: List[String]): Unit = {
+    def useItem(itemNameParts: List[String]): Adventurer = {
       itemNameParts match {
         case Nil => println("What do you want to use?")
         case List(_*) => {
@@ -137,23 +211,27 @@ object Shell extends App {
           }
         }
       }
+      adventurer
     }
 
-    def listInventory(): Unit = {
-        println("You are carrying:")
-        adventurer.contents foreach { item => println(s"* ${item.label}") }
+    def listInventory(): Adventurer = {
+      println("You are carrying:")
+      adventurer.items foreach { item => println(s"* ${item.label}") }
+      adventurer
     }
 
-    def invalidDestination(): Unit = println("You can't go that way.")
+    def invalidDestination(): Adventurer = {
+      println("You can't go that way.")
+      adventurer
+    }
   }
   
   
-
-  type CommandHandler = PartialFunction[List[String],Unit]
+  type CommandHandler = PartialFunction[List[String],Adventurer]
 
   case class Command(verbs: List[String], handler: CommandHandler)
   
-  private def parserCommands(avatar: ShellAdventurer): List[Command] = {
+  private def parserCommands(avatar: ShellParser): List[Command] = {
     val quit = Command(
       verbs = List("quit","exit"),
       handler = { case List("quit") | List("exit") => avatar.stopAdventuring }
@@ -184,7 +262,7 @@ object Shell extends App {
       handler = { case List("exits") => avatar.exits }
     )
 
-   val compassRose = Command(
+    val compassRose = Command(
       verbs = List("north","south","east","west"),
       handler = { case token @ (List("north") | List("south") | List("east") | List("west")) => avatar.useExit(token.head) }
     )
@@ -212,28 +290,7 @@ object Shell extends App {
     List(quit, look, examine, go, walk, exits, compassRose, take, drop, inventory, use)  
   }
 
-  private def parserOf(commands: Command*): CommandHandler = {
-    val gameHandlers = commands map {_.handler}
-    
-    val baseHandlers = List[CommandHandler](
-      { case List("help") | List("commands") => println ((commands flatMap {_.verbs}) ++ List("help", "commands") mkString ", ") },
-      { case List("") => Unit }, 
-      { case _ => println("You don't know how to do that.") })
 
-    (gameHandlers ++ baseHandlers) reduceLeft { _ orElse _ }
-  }
+  new ShellParser(MysteriousBeach)
 
-  private def getInputTokens: List[String] = {
-    print("\n> ")
-    val playerInput = StdIn.readLine.trim.toLowerCase
-    println
-
-    playerInput.split("\\s+").toList
-  }
-
-  val avatar = new ShellAdventurer(adventure.begin)
-  val parseCommand = parserOf(parserCommands(avatar):_*)
-  
-  avatar.startAdventuring
-  do parseCommand(getInputTokens) while (avatar.isAdventuring)
 }

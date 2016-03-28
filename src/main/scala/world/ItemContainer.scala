@@ -1,10 +1,12 @@
 package world
 
-import scala.collection.immutable.ListSet
-import scala.collection.IterableLike
+import scala.language.postfixOps
 
+/**
+ * Immutable container of items.
+ */
 trait ItemContainer {
-  private var _contents = ListSet[Item]()
+  def items: List[Item]
 
   def findNamedItem(name: String): List[Item] = {
     val nameParts = name.split("\\s+").toList
@@ -13,26 +15,14 @@ trait ItemContainer {
       val adjectives = nameParts.init.toSet
       val noun = nameParts.last
 
-      contents.filter { item => adjectives.subsetOf(item.adjectives) && item.noun == noun } toList
+      items.filter { item => adjectives.subsetOf(item.adjectives) && item.noun == noun } toList
     } else Nil
   }
 
-  def removeItem(item: Item) {
-    _contents = _contents - item
-
-    assert(!_contents.contains(item))
-  }
-
-  def addItem(item: Item) {
-    _contents= _contents + item
-
-    assert(_contents.contains(item))
-  }
-
-  def addItems(items: ListSet[Item]) = items foreach addItem
-
-  def hasItems = !contents.isEmpty
-
-  def contents = _contents
+  /**
+   * Determines whether the container holds any items.
+   * @return true when the container holds at least one item
+   */
+  def hasItems: Boolean = !items.isEmpty
 
 }
